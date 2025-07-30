@@ -25,6 +25,10 @@ mongoose.connection.on('error', (error) => {
   console.error(`2. 🚫 Error → : ${error.message}`);
 });
 
+mongoose.connection.on('connected',()=>{
+  console.log("Database connected successfully");
+})
+
 const modelsFiles = globSync('./src/models/**/*.js');
 
 for (const filePath of modelsFiles) {
@@ -35,5 +39,6 @@ for (const filePath of modelsFiles) {
 const app = require('./app');
 app.set('port', process.env.PORT || 8888);
 const server = app.listen(app.get('port'), () => {
-  console.log(`Express running → On PORT : ${server.address().port}`);
+  console.log(`Server is running On PORT : ${server.address().port}`);
 });
+

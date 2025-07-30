@@ -9,12 +9,14 @@ const coreAuthRouter = require('./routes/coreRoutes/coreAuth');
 const coreApiRouter = require('./routes/coreRoutes/coreApi');
 const coreDownloadRouter = require('./routes/coreRoutes/coreDownloadRouter');
 const corePublicRouter = require('./routes/coreRoutes/corePublicRouter');
+const leadRouter = require('./routes/modified.routes/lead.route.js')
 const adminAuth = require('./controllers/coreControllers/adminAuth');
 
 const errorHandlers = require('./handlers/errorHandlers');
 const erpApiRouter = require('./routes/appRoutes/appApi');
 
 const fileUpload = require('express-fileupload');
+const {cloudinaryConnect} = require("./config/cloudinary")
 // create our Express app
 const app = express();
 
@@ -32,7 +34,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 
 // // default options
-// app.use(fileUpload());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp',
+  })
+);
+
+cloudinaryConnect();
 
 // Here our API Routes
 
@@ -41,6 +50,14 @@ app.use('/api', adminAuth.isValidAuthToken, coreApiRouter);
 app.use('/api', adminAuth.isValidAuthToken, erpApiRouter);
 app.use('/download', coreDownloadRouter);
 app.use('/public', corePublicRouter);
+app.use('/api/v1/lead',leadRouter);
+
+app.get('/', (req, res) => {
+  return res.json({
+    success: true,
+    message: 'Your server is up and running...',
+  });
+});
 
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);

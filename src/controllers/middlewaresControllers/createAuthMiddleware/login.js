@@ -6,8 +6,11 @@ const authUser = require('./authUser');
 
 const login = async (req, res, { userModel }) => {
   const UserPasswordModel = mongoose.model(userModel + 'Password');
+  
   const UserModel = mongoose.model(userModel);
+  
   const { email, password } = req.body;
+  
 
   // validate
   const objectSchema = Joi.object({
@@ -19,6 +22,7 @@ const login = async (req, res, { userModel }) => {
 
   const { error, value } = objectSchema.validate({ email, password });
   if (error) {
+    console.error("error in login controller",error);
     return res.status(409).json({
       success: false,
       result: null,
@@ -28,7 +32,11 @@ const login = async (req, res, { userModel }) => {
     });
   }
 
+  
+
+
   const user = await UserModel.findOne({ email: email, removed: false });
+
 
   // console.log(user);
   if (!user)
@@ -57,3 +65,8 @@ const login = async (req, res, { userModel }) => {
 };
 
 module.exports = login;
+
+
+
+
+
