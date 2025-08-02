@@ -62,6 +62,12 @@ const leadSchema = new mongoose.Schema({
         type:Boolean,
         default:true,
 
+    },
+    reminder: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reminder'
     }
+  ]
 },{timestamps:true});
 module.exports = mongoose.model("Lead",leadSchema);

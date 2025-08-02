@@ -10,6 +10,7 @@ const coreApiRouter = require('./routes/coreRoutes/coreApi');
 const coreDownloadRouter = require('./routes/coreRoutes/coreDownloadRouter');
 const corePublicRouter = require('./routes/coreRoutes/corePublicRouter');
 const leadRouter = require('./routes/modified.routes/lead.route.js')
+const reminderRouter = require("./routes/modified.routes/reminder.route")
 const adminAuth = require('./controllers/coreControllers/adminAuth');
 
 const errorHandlers = require('./handlers/errorHandlers');
@@ -51,6 +52,7 @@ app.use('/api', adminAuth.isValidAuthToken, erpApiRouter);
 app.use('/download', coreDownloadRouter);
 app.use('/public', corePublicRouter);
 app.use('/api/v1/lead',leadRouter);
+app.use('/api/v1/reminder',reminderRouter);
 
 app.get('/', (req, res) => {
   return res.json({

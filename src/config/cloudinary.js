@@ -1,9 +1,5 @@
 const cloudinary = require('cloudinary').v2; //! Cloudinary is being required
 require ('dotenv').config();
-console.log("process.env.CLOUD_NAME,",process.env.CLOUD_NAME,); 
-      console.log("api_key", process.env.API_KEY);
-
-      console.log("api_secret",process.env.API_SECRET);
 
 exports.cloudinaryConnect = () => {
   try {
