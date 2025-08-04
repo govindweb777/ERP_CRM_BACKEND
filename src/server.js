@@ -27,7 +27,11 @@ mongoose.connection.on('error', (error) => {
 
 mongoose.connection.on('connected',()=>{
   console.log("Database connected successfully");
+  console.log('DB connected:', mongoose.connection.name);
 })
+
+
+
 
 const modelsFiles = globSync('./src/models/**/*.js');
 

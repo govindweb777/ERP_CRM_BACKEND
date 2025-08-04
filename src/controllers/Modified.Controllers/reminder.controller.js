@@ -1,5 +1,6 @@
 const Reminder = require('../../models/modified.model/reminder.model');
-const lead = require('../../models/modified.model/reminder.model');
+const Lead = require('../../models/modified.model/lead.model');
+const mongoose= require("mongoose");
 
 exports.addReminder=async(req,res)=>{
     try {
@@ -10,8 +11,18 @@ exports.addReminder=async(req,res)=>{
             date,
             time
         }= req.body;
+        console.log(req.body);
 
-        const lead= await lead.findById(leadId);
+        if (!mongoose.Types.ObjectId.isValid(leadId)) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid leadId format',
+          });
+        }
+
+        const lead= await Lead.findById(leadId);
+        // const leads = await Lead.find();
+        // console.log("leads are :",leads);
         if(!lead){
             return res.status(404).json({
                 success:false,
@@ -78,7 +89,7 @@ exports.getAllReminder = async(req,res)=>{
 
 exports.getReminderByDate = async(req,res)=>{
     try {
-        const {date}= req.query;
+        const {date}= req.params;
         const reminders = await Reminder.find({
             date:date
         }).populate('leadId')
@@ -107,10 +118,49 @@ exports.getReminderByDate = async(req,res)=>{
     }
 }
 
+exports.getReminderByLeadId = async(req,res)=>{
+    try {
+        const {
+            LeadId
+        }= req.params;
+        
+        const reminders = await Reminder.find({ LeadId })
+        
+        if(reminders.length==0){
+            return res.status(404).json({
+                success:false,
+                message:"reminder not found for this lead"
+            })
+        }
+        return res.status(200).json({
+            success:true,
+            length: reminders.length,
+            reminders
+        })
+
+        
+    } catch (error) {
+        console.error("error in geting reminder by lead id",error);
+        return res.status(400).json({
+            success:false,
+            message:error.message
+        })
+        
+    }
+}
+
 exports.deleteReminder = async(req,res)=>{
     try {
-        const reminderId = req.params;
+        const {reminderId} = req.params;
+        
+        if(!reminderId){
+            return res.status(402).json({
+                succcess:false,
+                message:"mising required fields"
+            })
+        }
         const reminder = await Reminder.findByIdAndDelete(reminderId);
+        
         if(!reminder){
             return res.status(400).json({
                 success:false,
