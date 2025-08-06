@@ -41,7 +41,7 @@ const leadSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:['Not Sure','Completed','Under Converstaion','Deal Closed','Under Process']
+        enum:['Not Sure','Completed','Under Conversation','Deal Closed','Under Process']
 
     },
     remark:{
