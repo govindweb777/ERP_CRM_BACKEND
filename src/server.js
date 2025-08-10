@@ -39,6 +39,8 @@ for (const filePath of modelsFiles) {
   require(path.resolve(filePath));
 }
 
+
+
 // Start our app!
 const app = require('./app');
 app.set('port', process.env.PORT || 8888);
