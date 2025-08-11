@@ -7,6 +7,7 @@ const {
   getActiveLeads,
   deactivateLead,
   activateLead,
+  findLeadByAssignedTo,
 } = require('../../controllers/Modified.Controllers/lead.controller');
 
 const express = require('express');
@@ -20,5 +21,6 @@ router.put('/activate-lead/:id',activateLead);
 router.get('/get-By-Id/:id', getLeadById);
 router.put('/update/:id', updateLead);
 router.delete('/delete/:id', deleteLead);
+router.get('/get-assign/:assignedToId', findLeadByAssignedTo);
 
 module.exports = router;

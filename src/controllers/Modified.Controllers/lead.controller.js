@@ -7,7 +7,7 @@ const {uploadFileToCloudinary} = require("../..//utils/fileUpload");
 // ==========================================
 exports.createLead = async (req, res) => {
   try {
-    let { name, email, contactNo, source, Address, status, remark, notes, industry, isActive } =
+    let { name, email, contactNo, source, Address, status, remark, notes, industry, isActive,assignedTo } =
       req.body;
 
     console.log('Inside createLead:', req.body);
@@ -29,10 +29,10 @@ exports.createLead = async (req, res) => {
     console.log('Uploaded documents:', req.files);
 
     // ✅ Validate required fields
-    if (!name || !email || !contactNo || !source || !documents) {
+    if (!name || !email || !contactNo || !source || !documents ||!assignedTo) {
       return res.status(400).json({
         success: false,
-        message: 'All required fields (name, email, contactNo, source, documents) must be provided',
+        message: 'All required fields (name, email, contactNo, assignedTo ,source, documents) must be provided',
       });
     }
 
@@ -52,6 +52,7 @@ exports.createLead = async (req, res) => {
       industry,
       isActive: isActive ?? true,
       documents: uploadedDoc.secure_url,
+      assignedTo,
     });
 
     return res.status(201).json({
@@ -274,3 +275,36 @@ exports.activateLead = async (req, res) => {
     });
   }
 };
+
+exports.findLeadByAssignedTo =async(req,res)=>{
+  try {
+    let  {assignedToId}= req.params;
+
+    if (assignedToId.startsWith(':')) {
+      assignedToId = assignedToId.slice(1);
+    }
+
+    const leads = await Lead.find({assignedTo:assignedToId}).sort({createdAt:-1}).populate('assignedTo');
+
+    const length = leads.length;
+    if(length==0){
+      return res.status(404).json({
+        success:false,
+        message:" no lead found for this assigned to user"
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:'all lead fetched successfully for this assigned user',
+      leads,
+      length:length
+    })
+    
+  } catch (error) {
+    console.error("problem in fetching assigned lead",error);
+    return res.status(400).json({
+      success:false,
+      message:error.message
+    })
+  }
+}

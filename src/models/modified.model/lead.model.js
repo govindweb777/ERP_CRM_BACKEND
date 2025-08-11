@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Admin = require("../coreModels/Admin");
 
 const leadSchema = new mongoose.Schema({
     name:{
@@ -38,6 +39,11 @@ const leadSchema = new mongoose.Schema({
             type:String,
             required:true
         }
+    },
+    assignedTo:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Admin'
+
     },
     status:{
         type:String,
