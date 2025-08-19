@@ -145,6 +145,46 @@ exports.getLeadById = async (req, res) => {
 // @desc    Update a lead by ID
 // @route   PUT /api/leads/:id
 // ==========================================
+// exports.updateLead = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const lead = await Lead.findById(id);
+
+//     if (!lead) {
+//       return res.status(404).json({
+//         success: false,
+//         message: 'Lead not found',
+//       });
+//     }
+
+//     const updateData = req.body;
+
+//     // Optional: replace document if new file provided
+//     if (req.files?.documents) {
+//       const uploadedDoc = await uploadFileToCloudinary(req.files.documents, 'lead_documents');
+//       updateData.documents = uploadedDoc.secure_url;
+//     }
+
+//     const updatedLead = await Lead.findByIdAndUpdate(id, updateData, {
+//       new: true,
+//       runValidators: true,
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       message: 'Lead updated successfully',
+//       data: updatedLead,
+//     });
+//   } catch (error) {
+//     console.error('Error updating lead:', error);
+//     return res.status(500).json({
+//       success: false,
+//       message: 'Failed to update lead',
+//       error: error.message,
+//     });
+//   }
+// };
+
 exports.updateLead = async (req, res) => {
   try {
     const { id } = req.params;
@@ -157,7 +197,19 @@ exports.updateLead = async (req, res) => {
       });
     }
 
-    const updateData = req.body;
+    let updateData = { ...req.body };
+
+    // ✅ Handle Address parsing - same as in createLead
+    if (typeof updateData.Address === 'string') {
+      try {
+        updateData.Address = JSON.parse(updateData.Address);
+      } catch (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid JSON format in Address field',
+        });
+      }
+    }
 
     // Optional: replace document if new file provided
     if (req.files?.documents) {

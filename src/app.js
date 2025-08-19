@@ -49,8 +49,8 @@ cloudinaryConnect();
 
 app.use('/api', coreAuthRouter);
 app.use('/api/v1/user', userRouter);
-// app.use('/api', adminAuth.isValidAuthToken, coreApiRouter);
-// app.use('/api', adminAuth.isValidAuthToken, erpApiRouter);
+app.use('/api', adminAuth.isValidAuthToken, coreApiRouter);
+app.use('/api', adminAuth.isValidAuthToken, erpApiRouter);
 app.use('/download', coreDownloadRouter);
 app.use('/public', corePublicRouter);
 app.use('/api/v1/lead',leadRouter);
